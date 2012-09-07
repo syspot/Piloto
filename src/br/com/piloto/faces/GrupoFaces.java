@@ -36,7 +36,7 @@ public class GrupoFaces extends CrudFaces<Grupo> {
 		permissao.setMenu(new Menu());
 		permissao.setFlagInserir(Boolean.TRUE);
 		permissao.setFlagAlterar(Boolean.TRUE);
-		permissao.setFlagExcluir(Boolean.TRUE);
+		permissao.setFlagExcluir(Boolean.FALSE);
 		
 		if (TSUtil.isEmpty(getCrudModel().getPermissoes())) {
 			getCrudModel().setPermissoes(new ArrayList<Permissao>());
@@ -48,7 +48,7 @@ public class GrupoFaces extends CrudFaces<Grupo> {
 
 		} else {
 
-			PilotoUtil.addErrorMessage("Essa permiss„o j· foi adicionada");
+			PilotoUtil.addErrorMessage("Essa permiss√£o j√° foi adicionada");
 		}
 
 		return null;

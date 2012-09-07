@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import br.com.piloto.model.Menu;
+import br.com.piloto.model.Permissao;
 import br.com.piloto.model.Usuario;
 import br.com.piloto.util.Constantes;
 import br.com.piloto.util.PilotoUtil;
@@ -24,7 +25,8 @@ public class AutenticacaoFaces extends TSMainFaces {
 	private String tela;
 	private Usuario usuario;
 	private List<Menu> menus;
-	private Menu menuSelecionado;
+	private List<Permissao> permissoes;	
+	private Permissao PermissaoSelecionada;
 	private Integer tabAtiva;
 
 	public AutenticacaoFaces() {
@@ -43,26 +45,30 @@ public class AutenticacaoFaces extends TSMainFaces {
 
         this.menus = Collections.emptyList();               
         
-        this.menuSelecionado = new Menu();
+        this.PermissaoSelecionada = new Permissao();
 
     }
 
 	public String redirecionar() {
 
-		if (!TSUtil.isEmpty(this.menuSelecionado.getManagedBeanReset())) {
-			TSFacesUtil.removeManagedBeanInSession(this.menuSelecionado.getManagedBeanReset());
+		if (!TSUtil.isEmpty(this.PermissaoSelecionada.getMenu().getManagedBeanReset())) {
+			TSFacesUtil.removeManagedBeanInSession(this.PermissaoSelecionada.getMenu().getManagedBeanReset());
 		}
 
-		setTela(this.menuSelecionado.getUrl());
-		setNomeTela("Area de Trabalho > " + menuSelecionado.getMenuPai().getDescricao() + " > " + menuSelecionado.getDescricao());
-		setTabAtiva(Integer.valueOf(this.menus.indexOf(this.menuSelecionado.getMenuPai())));
+		setTela(this.PermissaoSelecionada.getMenu().getUrl());
+		setNomeTela("Area de Trabalho > " + PermissaoSelecionada.getMenu().getMenuPai().getDescricao() + " > " + PermissaoSelecionada.getMenu().getDescricao());
+		setTabAtiva(Integer.valueOf(this.menus.indexOf(this.PermissaoSelecionada.getMenu().getMenuPai())));
 		
 		return SUCESSO;
 	}
 	
 	private void carregarMenu() {
 		
-		menus = new Menu().findAll("ordem");
+		menus = new Menu().pesquisarCabecalhos(UsuarioUtil.obterUsuarioConectado().getGrupo().getId());
+		
+		Permissao permissao = new Permissao();
+		permissao.setGrupo(UsuarioUtil.obterUsuarioConectado().getGrupo());
+		permissoes = permissao.pesquisarPermissoes();
 		
 	}
 	
@@ -119,20 +125,28 @@ public class AutenticacaoFaces extends TSMainFaces {
 		this.menus = menus;
 	}
 
-	public Menu getMenuSelecionado() {
-		return menuSelecionado;
-	}
-
-	public void setMenuSelecionado(Menu menuSelecionado) {
-		this.menuSelecionado = menuSelecionado;
-	}
-
 	public Integer getTabAtiva() {
 		return tabAtiva;
 	}
 
 	public void setTabAtiva(Integer tabAtiva) {
 		this.tabAtiva = tabAtiva;
+	}
+
+	public List<Permissao> getPermissoes() {
+		return permissoes;
+	}
+
+	public void setPermissoes(List<Permissao> permissoes) {
+		this.permissoes = permissoes;
+	}
+
+	public Permissao getPermissaoSelecionada() {
+		return PermissaoSelecionada;
+	}
+
+	public void setPermissaoSelecionada(Permissao permissaoSelecionada) {
+		PermissaoSelecionada = permissaoSelecionada;
 	}
 	
 }

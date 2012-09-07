@@ -1,5 +1,8 @@
 package br.com.piloto.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import br.com.piloto.util.PilotoUtil;
 import br.com.topsys.database.hibernate.TSActiveRecordAb;
 import br.com.topsys.util.TSUtil;
 
@@ -85,6 +89,19 @@ public class Permissao extends TSActiveRecordAb<Permissao> {
 
 	public void setMenu(Menu menu) {
 		this.menu = menu;
+	}
+	
+	public List<Permissao> pesquisarPermissoes() {
+
+		StringBuilder query = new StringBuilder();
+		
+		query.append(" from Permissao where grupo.id = ? order by menu.ordem, menu.descricao");
+		
+		List<Object> params = new ArrayList<Object>();
+		
+		params.add(grupo.getId());		
+		
+		return super.find(query.toString(), params.toArray());
 	}
 
 	@Override

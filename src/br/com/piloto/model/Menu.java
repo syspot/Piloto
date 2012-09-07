@@ -111,6 +111,21 @@ public final class Menu extends TSActiveRecordAb<Menu> {
 	public void setMenuPai(Menu menuPai) {
 		this.menuPai = menuPai;
 	}
+	
+	public List<Menu> pesquisarCabecalhos(Long grupoID) {
+		
+		return findBySQL("select * from menus m where menu_id is null and flag_ativo = true and exists (select 1 from menus m2, permissoes p where m2.menu_id = m.id and m2.id = p.menu_id and p.grupo_id = ?) order by ordem, descricao", grupoID);
+		
+	}
+	
+	public List<Menu> pesquisarCabecalhos() {
+		
+		StringBuilder query = new StringBuilder();
+		
+		query.append(" from Menu m where menuPai is null and flagAtivo = true order by ordem, descricao");
+				
+		return super.find(query.toString());
+	}
 		
 	public List<Menu> pesquisarExecutaveis() {
 		
